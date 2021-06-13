@@ -1,0 +1,47 @@
+Удаление любого узла бинарного дерева
+
+typedef struct tree{
+    int data;
+    struct tree *left;
+    struct tree *right;
+}treeNode;
+
+treeNode *deleteNode(treeNode *root, int key) {
+
+    if (root == NULL)
+        return root;
+
+    if (key < root->data)
+        root->left = deleteNode(root->left, key);
+    else
+    if (key > root->data)
+        root->right = deleteNode(root->right, key);
+    else
+    {
+        if (root->left == NULL)
+        {
+            treeNode* temp = root->right;
+            free(root);
+            return temp;
+        }
+        else
+        if (root->right == NULL)
+        {
+            treeNode* temp = root->left;
+            free(root);
+            return temp;
+        }
+        treeNode* temp = minValueNode(root->right);
+        root->data = temp->data;
+        root->right = deleteNode(root->right, temp->data);
+    }
+    return root;
+}
+
+treeNode* minValueNode(treeNode* node)
+{
+    treeNode* current = node;
+    while (current && current->left != NULL)
+        current = current->left;
+    return current;
+}

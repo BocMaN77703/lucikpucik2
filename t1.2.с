@@ -1,0 +1,15 @@
+Проход по дереву рекурсивно, вывод по возрастанию.
+
+typedef struct tree{
+    int data;
+    struct tree *left;
+    struct tree *right;
+}treeNode;
+
+void output (treeNode* root){
+    if(root){
+        if(root->left) output(root->left);
+        printf("Value: %d\n", root->data);
+        if(root->right) output(root->right);
+    }
+}

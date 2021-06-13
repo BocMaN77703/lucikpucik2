@@ -1,0 +1,60 @@
+Осуществить нерекурсивный проход по бинарному дереву, чтобы печатался сначала предок, а потом потомок.
+
+typedef struct tree{
+    int data;
+    struct tree *left;
+    struct tree *right;
+}treeNode;
+
+typedef struct stack{
+    struct tree *tree;
+    struct stack* next;
+}stackNode;
+
+void preOrder (treeNode*root){
+    stackNode * stack = NULL;
+    pushStack(root, &stack);
+
+    while (!isEmpty(stack)){
+        treeNode *current = stack->tree;
+        printf("Value: %d\n", current->data);
+        current = pop(&stack);
+        if(current->right!=NULL)
+            pushStack(current->right, &stack);
+        if(current->left!=NULL)
+            pushStack(current->left, &stack);
+    }
+}
+
+bool isEmpty(stackNode *top){
+    return (top == NULL)? true : false;
+}
+
+void pushStack (treeNode* current, stackNode **topReference){
+    stackNode *newStack = (stackNode*) malloc(sizeof(stackNode)); //создаем доп. указ. для работы со стеком
+    if(newStack == NULL)
+    {
+        printf("Stack is empty\n");                       //Проверяем выделилась ли память по доп. указ.
+        exit(0);
+    }
+    newStack->tree = current;                                     //Обычное создание стека
+    newStack->next = (*topReference);
+    (*topReference) = newStack;
+}
+
+treeNode *pop(stackNode **topReference)
+{
+    treeNode *leaf;                             //лист нашего дерева
+    stackNode *topOfStack;                      //дополнительный указатель для работы со стеком
+    if(isEmpty(*topReference)){
+        printf("Stack is empty\n");     //проверка на существование стека
+        exit(0);
+    }else{
+        topOfStack = *topReference;             //в доп. указ. записываем вершину исходнего стека
+        leaf = topOfStack->tree;                //в этот указ. мы присваиваем тот лист дерева, который соответствуют
+        *topReference = topOfStack->next;       //нашей вершине, а далее мы снимаем вершину и передвигаемся на один
+        free(topOfStack);                       //вниз и получаем новую вершину стека. Затем очищаем вершину стека.
+        return leaf;                            //возращаем укатель на предка.
+    }
+
+}
