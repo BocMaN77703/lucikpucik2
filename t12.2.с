@@ -1,0 +1,35 @@
+Функция нерекурсивного создания бинарного дерева.
+
+typedef struct tree{
+    int data;
+    struct tree *left;
+    struct tree *right;
+}treeNode;
+
+treeNode *newNode(int value){
+    treeNode *node =(treeNode*)malloc(sizeof(treeNode)); //функция, которая создает узел нашего дерева
+    node->data = value;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+treeNode *insert(treeNode* rootRef, int value) {
+    treeNode *root = newNode(value); //(x и y) temp-переменные, которые нам нужны для создания БД 
+    treeNode *x = rootRef;
+    treeNode *y = NULL;
+    while (x != NULL){
+        y = x;
+        if(value < x->data)
+            x = x->left;
+        else
+            x= x->right;
+    }
+    if(y == NULL)
+        y = root;
+    else if(value < y->data)
+        y->left = root;
+    else
+        y->right = root;
+    return y;
+}
